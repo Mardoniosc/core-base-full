@@ -71,9 +71,7 @@
         <div class="form-group col-md-4">
           <label for="perfilId">Perfil</label>
           <select class="form-control" name="perfilId" id="perfilId" formControlName="perfilId">
-            <option value="1">ROOT</option>
-            <option value="2">ADMINISTRADOR</option>
-            <option value="3">GESTOR</option>
+            <option *ngFor="let p of profiles" value="{{ p.id }}">{{ p.nome }}</option>
           </select>
         </div>
 

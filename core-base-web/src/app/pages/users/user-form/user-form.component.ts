@@ -6,6 +6,8 @@ import { switchMap } from 'rxjs/operators';
 import toastr from 'toastr';
 import { UsersService } from '../shared/users.service';
 import { User } from '../shared/user.model';
+import { Profile } from '../../profiles/shared/profile.model';
+import { ProfileService } from '../../profiles/shared/profile.service';
 
 @Component({
   selector: 'app-user-form',
@@ -20,6 +22,8 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
   submittingForm: boolean = false;
 
   user: User = new User();
+
+  profiles: Profile[] = [];
 
   ptBR = {
     firstDayOfWeek: 0,
@@ -68,6 +72,7 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
 
   constructor(
     private userService: UsersService,
+    private profileService: ProfileService,
     private route: ActivatedRoute,
     private router: Router,
     private formBuilder: FormBuilder
@@ -76,6 +81,7 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
   ngOnInit(): void {
     this.setCurrentAction();
     this.buildUserForm();
+    this.loadProfiles();
     this.loadUser();
   }
 
@@ -115,6 +121,13 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
       status: [0],
       perfilId: [null, [Validators.required]],
     });
+  }
+
+  private loadProfiles() {
+    this.profileService.getAll().subscribe(
+      (data) => (this.profiles = data),
+      (err) => console.error(err)
+    );
   }
 
   private loadUser() {

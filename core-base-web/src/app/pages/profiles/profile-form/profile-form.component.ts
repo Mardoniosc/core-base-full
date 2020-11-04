@@ -132,10 +132,10 @@ export class ProfileFormComponent implements OnInit {
 
   setPageTitle() {
     if (this.currentAction === 'new') {
-      this.pageTitle = 'Cadastro de novo usuário';
+      this.pageTitle = 'Cadastro de novo Perfil';
     } else {
       const profileName = this.profile.nome || '';
-      this.pageTitle = 'Editando usuário: ' + profileName;
+      this.pageTitle = 'Editando Perfil: ' + profileName;
     }
   }
 
