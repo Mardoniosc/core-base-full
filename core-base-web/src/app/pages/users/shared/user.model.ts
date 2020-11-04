@@ -15,4 +15,8 @@ export class User extends BaseResourceModel {
   ) {
     super();
   }
+
+  static fromJson(jsonData: any): User {
+    return Object.assign(new User(), jsonData);
+  }
 }

@@ -8,21 +8,31 @@ import { BaseResourceModel } from '../models';
 export abstract class BaseResourceService<T extends BaseResourceModel> {
   protected http: HttpClient;
 
-  constructor(protected apiPath: string, protected injector: Injector) {
+  constructor(
+    protected apiPath: string,
+    protected injector: Injector,
+    protected jsonDataToResourceFn: (jsonData: any) => T
+  ) {
     this.http = injector.get(HttpClient);
   }
 
   getAll(): Observable<T[]> {
     return this.http
       .get<T[]>(this.apiPath)
-      .pipe(catchError(this.handleError), map(this.jsonDataToresources));
+      .pipe(
+        catchError(this.handleError),
+        map(this.jsonDataToresources.bind(this))
+      );
   }
 
   getById(id: number): Observable<T> {
     const url = `${this.apiPath}/${id}`;
     return this.http
       .get(url)
-      .pipe(catchError(this.handleError), map(this.jsonDataToresource));
+      .pipe(
+        catchError(this.handleError),
+        map(this.jsonDataToresource.bind(this))
+      );
   }
 
   create(profile: T): Observable<any> {
@@ -53,12 +63,14 @@ export abstract class BaseResourceService<T extends BaseResourceModel> {
   // PRIVATE METHODS
   protected jsonDataToresources(jsonData: any[]): T[] {
     const profiles: T[] = [];
-    jsonData.forEach((element) => profiles.push(element as T));
+    jsonData.forEach((element) =>
+      profiles.push(this.jsonDataToResourceFn(element))
+    );
     return profiles;
   }
 
   protected jsonDataToresource(jsonData: any[]): T {
-    return (jsonData as unknown) as T;
+    return this.jsonDataToResourceFn(jsonData);
   }
 
   protected handleError(error: any): Observable<any> {

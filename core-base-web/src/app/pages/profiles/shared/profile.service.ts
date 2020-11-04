@@ -8,6 +8,6 @@ import { BaseResourceService } from 'src/app/shared';
 })
 export class ProfileService extends BaseResourceService<Profile> {
   constructor(protected injector: Injector) {
-    super('/api/perfils', injector);
+    super('/api/perfils', injector, Profile.fromJson);
   }
 }

@@ -8,6 +8,6 @@ import { Permition } from './permition.model';
 })
 export class PermitionService extends BaseResourceService<Permition> {
   constructor(protected injector: Injector) {
-    super('/api/permissoes', injector);
+    super('/api/permissoes', injector, Permition.fromJson);
   }
 }

@@ -28,6 +28,11 @@
         <div class="form-group col-md-4">
           <label for="nome">Nome</label>
           <input type="text" class="form-control" formControlName="nome" id="nome" />
+          <div class="text-danger" *ngIf="userForm.get('nome').invalid && userForm.get('nome').touched">
+            <div *ngIf="userForm.get('nome').errors.required">Preenchimento Obrigatório</div>
+            <div *ngIf="userForm.get('nome').errors.minlength">Deve ter no mínimo 2 caracteres</div>
+          </div>
+
         </div>
 
         <!-- E-mail -->

@@ -9,4 +9,8 @@ export class Permition extends BaseResourceModel {
   ) {
     super();
   }
+
+  static fromJson(jsonData: any): Permition {
+    return Object.assign(new Permition(), jsonData);
+  }
 }

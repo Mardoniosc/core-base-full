@@ -8,6 +8,6 @@ import { User } from './user.model';
 })
 export class UsersService extends BaseResourceService<User> {
   constructor(protected injector: Injector) {
-    super('/api/usuarios', injector);
+    super('/api/usuarios', injector, User.fromJson);
   }
 }
