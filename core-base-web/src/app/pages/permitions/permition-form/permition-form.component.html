@@ -16,7 +16,7 @@
   </div>
 </div>
 
-<form [formGroup]="permitionForm" (submit)="submitForm()">
+<form [formGroup]="resourceForm" (submit)="submitForm()">
   <div class="card">
     <div class="card-header">Informações sobre a Permissão</div>
     <div class="card-body">
@@ -51,7 +51,7 @@
     </ul>
   </div>
 
-  <button [disabled]="submittingForm || permitionForm.invalid" type="submit"
+  <button [disabled]="submittingForm || resourceForm.invalid" type="submit"
     class="btn btn-primary btn-lg mt-3 float-right">
     Salvar
   </button>

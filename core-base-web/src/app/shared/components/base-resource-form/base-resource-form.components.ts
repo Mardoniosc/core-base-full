@@ -52,7 +52,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
 
   // PRIVATE METHODS
 
-  private setCurrentAction() {
+  protected setCurrentAction() {
     if (this.route.snapshot.url[0].path === 'new') {
       this.currentAction = 'new';
     } else {
@@ -60,14 +60,9 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
     }
   }
 
-  private buildResourceForm() {
-    this.resourceForm = this.formBuilder.group({
-      id: [null],
-      nome: [null, [Validators.required, Validators.minLength(2)]],
-    });
-  }
+  protected abstract buildResourceForm(): void;
 
-  private loadResource() {
+  protected loadResource() {
     if (this.currentAction === 'edit') {
       this.route.paramMap
         .pipe(
@@ -81,8 +76,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
             this.resourceForm.patchValue(this.resource);
           },
           (err) => {
-            toastr.error('Erro ao carregar o usuario');
-            console.error('Erro ao carregar o usuario => ', err);
+            this.actionForError(err);
           }
         );
     }
@@ -104,7 +98,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
     return 'Edição';
   }
 
-  private createResource() {
+  protected createResource() {
     const resource: T = this.jsonDataToResourceFn(this.resourceForm.value);
     this.resourceService.create(resource).subscribe(
       (data) => {
@@ -119,7 +113,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
     );
   }
 
-  private updateResource() {
+  protected updateResource() {
     const resource: T = this.jsonDataToResourceFn(this.resourceForm.value);
     this.resourceService.update(resource).subscribe(
       (resource) => this.actionForSuccess(resource),
@@ -127,7 +121,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
     );
   }
 
-  private actionForSuccess(resource: T) {
+  protected actionForSuccess(resource: T) {
     toastr.success('Solicitação processada com sucesso!');
 
     this.router
@@ -135,14 +129,17 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
       .then(() => this.router.navigate(['resources', resource.id, 'edit']));
   }
 
-  private actionForError(err) {
-    toastr.error('Ocorreu um erro ao processar a sua solicitação!');
-
+  protected actionForError(err) {
     this.submittingForm = false;
 
     if (err.status === 422) {
       this.serverErrorMessages = JSON.parse(err._body).erros;
+    }
+    if (err.status === 504) {
+      toastr.error('Erro de comunicação com o servidor');
+      this.serverErrorMessages = ['Erro 504 - Gateway Timeout'];
     } else {
+      toastr.error('Ocorreu um erro ao processar a sua solicitação!');
       this.serverErrorMessages = [
         'Falha na comunicação com o servidor. Favor tente mais tarde!',
       ];

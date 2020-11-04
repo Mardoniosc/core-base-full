@@ -16,7 +16,7 @@ export class ProfileFormComponent extends BaseResourceFormComponent<Profile> {
     super(injector, new Profile(), profileService, Profile.fromJson);
   }
 
-  protected buildProfileForm() {
+  protected buildResourceForm() {
     this.resourceForm = this.formBuilder.group({
       id: [null],
       nome: [null, [Validators.required, Validators.minLength(2)]],
