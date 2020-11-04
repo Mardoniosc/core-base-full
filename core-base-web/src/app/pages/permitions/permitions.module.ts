@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
-
-import { SharedModule } from 'src/app/shared/shared.module';
-
-import { PermitionsRoutingModule } from './permitions-routing.module';
-import { PermitionListComponent } from './permition-list/permition-list.component';
-
-import { PermitionFormComponent } from './permition-form/permition-form.component';
+import { SharedModule } from 'src/app/shared';
+import {
+  PermitionFormComponent,
+  PermitionListComponent,
+  PermitionsRoutingModule,
+} from './';
 
 @NgModule({
   declarations: [PermitionFormComponent, PermitionListComponent],

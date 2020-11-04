@@ -4,8 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { switchMap } from 'rxjs/operators';
 import toastr from 'toastr';
-import { PermitionService } from '../shared/permition.service';
-import { Permition } from '../shared/permition.model';
+import { Permition, PermitionService } from '../shared';
 @Component({
   selector: 'app-permition-form',
   templateUrl: './permition-form.component.html',

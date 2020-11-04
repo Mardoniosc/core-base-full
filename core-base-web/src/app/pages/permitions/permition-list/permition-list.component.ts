@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Permition } from '../shared/permition.model';
-import { PermitionService } from '../shared/permition.service';
+import { Permition, PermitionService } from '../shared';
 
 @Component({
   selector: 'app-permition-list',

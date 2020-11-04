@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { switchMap } from 'rxjs/operators';
 import toastr from 'toastr';
-import { ProfileService } from '../shared/profile.service';
-import { Profile } from '../shared/profile.model';
+import { Profile, ProfileService } from '../shared';
+
 @Component({
   selector: 'app-profile-form',
   templateUrl: './profile-form.component.html',
