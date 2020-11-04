@@ -1,0 +1,40 @@
+<nav class="mb-5">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+    <li class="breadcrumb-item active">Usuários</li>
+  </ol>
+</nav>
+
+<div class="row mb-4">
+  <div class="col-md">
+    <h1 class="h2 border-left pl-2">Usuários</h1>
+  </div>
+  <div class="col-md">
+    <a routerLink="new" class="btn btn-success float-right">+ Novo usuário</a>
+  </div>
+</div>
+
+<table class="table table-houver">
+  <thead>
+    <tr class="bg-primary text-light">
+      <th>Usuários</th>
+      <th>Status</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>
+        <strong>{{ user.nome }}</strong><br />
+        <small>{{ user.email }}</small>
+      </td>
+      <td><h5><span class="badge" [class.badge-danger]="user.status != 1" [class.badge-primary]="user.status == 1" >{{ user.status == 1 ? 'Ativado' : 'Desativado' }}</span></h5></td>
+      <td>
+        <a [routerLink]="[user.id, 'edit']" class="btn btn-outline-info btn-sm mr-2"
+          >Editar</a
+        >
+        <a class="btn btn-outline-danger btn-sm">Excluir</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
