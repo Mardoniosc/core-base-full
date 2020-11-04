@@ -79,6 +79,7 @@ export class PermitionFormComponent implements OnInit, AfterContentChecked {
           (data) => {
             this.permition = data;
             this.permitionForm.patchValue({
+              id: this.permition.id,
               descricao: this.permition.descricao,
               url: this.permition.url,
               permissaoPai: this.permition.permissaoPai
