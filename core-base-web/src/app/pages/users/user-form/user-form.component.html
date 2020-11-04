@@ -1,8 +1,8 @@
 <nav class="mb-5">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
-    <li class="breadcrumb-item"><a routerLink="/categories">Usuários</a></li>
-    <li class="breadcrumb-item active">Formulário de Usuários</li>
+    <li class="breadcrumb-item"><a routerLink="/users">Usuários</a></li>
+    <li class="breadcrumb-item active">{{ pageTitle }}</li>
   </ol>
 </nav>
 
@@ -12,31 +12,100 @@
   </div>
   <div class="col-md">
     <a routerLink="/users" class="btn btn-light float-right">
-      << Voltar
-    </a>
+      << Voltar </a>
   </div>
 </div>
 
-<form>
+<form [formGroup]="userForm" (submit)="submitForm()">
   <div class="card">
     <div class="card-header">Informações sobre o usuário</div>
 
     <div class="card-body">
+      <!-- LINHA 1 -->
       <div class="form-row">
+
+        <!-- nome usuário -->
         <div class="form-group col-md-4">
-          <label for="name">Nome</label>
-          <input type="text" class="form-control" id="name" />
+          <label for="nome">Nome</label>
+          <input type="text" class="form-control" formControlName="nome" id="nome" />
         </div>
 
-        <div class="form-group col-md-8">
-          <label for="description">Descrição</label>
-          <input type="text" class="form-control" id="description" />
+        <!-- E-mail -->
+        <div class="form-group col-md-4">
+          <label for="description">E-mail</label>
+          <input type="email" class="form-control" formControlName="email" id="email" />
+        </div>
+
+        <!-- CPF -->
+        <div class="form-group col-md-4">
+          <label for="description">CPF</label>
+          <input type="text" class="form-control" id="cpf" formControlName="cpf" />
+        </div>
+      </div>
+
+      <!-- LINHA 2 -->
+      <div class="form-row">
+        <!-- senha -->
+        <div class="form-group col-md-4">
+          <label for="senha">Senha</label>
+          <input type="password" class="form-control" formControlName="senha" id="senha" />
+        </div>
+
+        <!-- confirmação da senha -->
+        <div class="form-group col-md-4">
+          <label for="confirmacaoSenha">Repidta a Senha</label>
+          <input type="password" class="form-control" id="confirmacaoSenha" />
+        </div>
+
+        <!-- date -->
+        <div class="form-group col-md-4">
+          <label for="dataNascimento">Data Nascimento</label><br>
+          <p-calendar id="dataNascimento" formControlName="dataNascimento" inputStyleClass="form-control"
+            dateFormat="dd/mm/yy" [locale]="ptBR" [showButtonBar]="true"></p-calendar>
+        </div>
+      </div>
+
+      <!-- LINHA 3 -->
+      <div class="form-row">
+        <!-- perfil -->
+        <div class="form-group col-md-4">
+          <label for="perfilId">Perfil</label>
+          <select class="form-control" name="perfilId" id="perfilId" formControlName="perfilId">
+            <option value="1">ROOT</option>
+            <option value="2">ADMINISTRADOR</option>
+            <option value="3">GESTOR</option>
+          </select>
+        </div>
+
+        <!-- Login User -->
+        <div class="form-group col-md-4">
+          <label for="login">Login</label>
+          <input type="text" class="form-control" formControlName="login" id="login" />
+        </div>
+
+        <!-- status usuário -->
+        <div class="form-group col-md-2">
+          <label for="paid">Status</label>
+          <div class="btn-group">
+            <label (click)="this.userForm.get('status').setValue(1)"
+              [class.active]="this.userForm.get('status').value === 1" class="btn btn-outline-info">Ativado</label>
+            <label (click)="this.userForm.get('status').setValue(0)"
+              [class.active]="this.userForm.get('status').value === 0" class="btn btn-outline-info">Desativado</label>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary btn-lg mt-3 float-right">
+  <div class="alert alert-danger mt-4" *ngIf="serverErrorMessages">
+    <strong>Erro no Servidor</strong>
+    <ul>
+      <li *ngFor="let err of serverErrorMessages">{{ err }}</li>
+    </ul>
+  </div>
+
+  <button [disabled]="submittingForm || userForm.invalid" type="submit" class="btn btn-primary btn-lg mt-3 float-right">
     Salvar
   </button>
+
 </form>

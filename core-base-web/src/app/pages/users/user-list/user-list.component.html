@@ -1,6 +1,6 @@
 <nav class="mb-5">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+    <li class="breadcrumb-item"><a routerLink="">Home</a></li>
     <li class="breadcrumb-item active">Usuários</li>
   </ol>
 </nav>
@@ -28,12 +28,13 @@
         <strong>{{ user.nome }}</strong><br />
         <small>{{ user.email }}</small>
       </td>
-      <td><h5><span class="badge" [class.badge-danger]="user.status != 1" [class.badge-primary]="user.status == 1" >{{ user.status == 1 ? 'Ativado' : 'Desativado' }}</span></h5></td>
       <td>
-        <a [routerLink]="[user.id, 'edit']" class="btn btn-outline-info btn-sm mr-2"
-          >Editar</a
-        >
-        <a class="btn btn-outline-danger btn-sm">Excluir</a>
+        <h5><span class="badge" [class.badge-danger]="user.status != 1"
+            [class.badge-primary]="user.status == 1">{{ user.status == 1 ? 'Ativado' : 'Desativado' }}</span></h5>
+      </td>
+      <td>
+        <a [routerLink]="[user.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <a class="btn btn-outline-danger btn-sm" (click)="deleteUser(user)">Excluir</a>
       </td>
     </tr>
   </tbody>

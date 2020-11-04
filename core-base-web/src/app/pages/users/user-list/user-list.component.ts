@@ -15,9 +15,20 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getAll().subscribe(
       (users) => {
-        this.users = users
+        this.users = users;
       },
       (err) => console.error(err)
     );
+  }
+
+  deleteUser(user: User) {
+    const mustDelete = confirm('Deseja realmente excluir este usuário?');
+
+    if (mustDelete) {
+      this.userService.delete(user.id).subscribe(
+        (data) => (this.users = this.users.filter((x) => x.id != user.id)),
+        (err) => alert('Erro ao tentar excluir este usuário!')
+      );
+    }
   }
 }

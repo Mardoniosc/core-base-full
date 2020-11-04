@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { Observable, throwError } from 'rxjs';
-import { map, catchError, flatMap } from 'rxjs/operators';
+import { map, catchError, flatMap, tap } from 'rxjs/operators';
 
 import { User } from './user.model';
 
@@ -27,10 +27,10 @@ export class UsersService {
       .pipe(catchError(this.handleError), map(this.jsonDataToUser));
   }
 
-  create(user: User): Observable<User> {
+  create(user: User): Observable<any> {
     return this.http
-      .post(this.apiPath, user)
-      .pipe(catchError(this.handleError), map(this.jsonDataToUser));
+      .post(this.apiPath, user, { observe: 'response', responseType: 'text' })
+      .pipe(catchError(this.handleError));
   }
 
   update(user: User): Observable<User> {
@@ -51,13 +51,13 @@ export class UsersService {
 
   // PRIVATE METHODS
   private jsonDataToUsers(jsonData: any[]): User[] {
-    const categories: User[] = [];
-    jsonData.forEach((element) => categories.push(element as User));
-    return categories;
+    const users: User[] = [];
+    jsonData.forEach((element) => users.push(element as User));
+    return users;
   }
 
   private jsonDataToUser(jsonData: any[]): User {
-    return jsonData as unknown as User;
+    return (jsonData as unknown) as User;
   }
 
   private handleError(error: any): Observable<any> {
