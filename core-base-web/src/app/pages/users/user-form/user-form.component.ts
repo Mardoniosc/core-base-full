@@ -105,6 +105,7 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
 
   private buildUserForm() {
     this.userForm = this.formBuilder.group({
+      id: [null],
       nome: [null, [Validators.required, Validators.minLength(2)]],
       email: [null, [Validators.required, Validators.email]],
       cpf: [null, [Validators.required]],
@@ -127,7 +128,16 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
         .subscribe(
           (data) => {
             this.user = data;
-            this.userForm.patchValue(this.user);
+            this.userForm.patchValue({
+              nome: this.user.nome,
+              id: this.user.id,
+              email: this.user.email,
+              cpf: this.user.cpf,
+              login: this.user.login,
+              status: this.user.status,
+              perfilId: data['perfil'].id,
+              dataNascimento: new Date(this.user.dataNascimento),
+            });
           },
           (err) => {
             toastr.error('Erro ao carregar o usuario');
@@ -164,7 +174,6 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
 
   private updateUser() {
     const user: User = Object.assign(new User(), this.userForm.value);
-
     this.userService.update(user).subscribe(
       (user) => this.actionForSuccess(user),
       (err) => this.actionForError(err)
