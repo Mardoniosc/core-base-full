@@ -1,4 +1,6 @@
-export class User {
+import { BaseResourceModel } from 'src/app/shared';
+
+export class User extends BaseResourceModel {
   constructor(
     public id?: number,
     public nome?: string,
@@ -10,5 +12,7 @@ export class User {
     public imagem?: string,
     public status?: number,
     public perfilId?: number
-  ) {}
+  ) {
+    super();
+  }
 }
