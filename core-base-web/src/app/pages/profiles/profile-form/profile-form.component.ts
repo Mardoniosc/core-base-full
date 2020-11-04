@@ -11,7 +11,7 @@ import { Profile } from '../shared/profile.model';
   templateUrl: './profile-form.component.html',
   styleUrls: ['./profile-form.component.css'],
 })
-export class ProfileFormComponent implements OnInit {
+export class ProfileFormComponent implements OnInit, AfterContentChecked {
   currentAction: string;
   profileForm: FormGroup;
   pageTitle: string;
@@ -19,51 +19,6 @@ export class ProfileFormComponent implements OnInit {
   submittingForm: boolean = false;
 
   profile: Profile = new Profile();
-
-  ptBR = {
-    firstDayOfWeek: 0,
-    dayNames: [
-      'Domingo',
-      'Segunda',
-      'Terça',
-      'Quarta',
-      'Quinta',
-      'Sexta',
-      'Sábado',
-    ],
-    dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'],
-    dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
-    monthNames: [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro',
-    ],
-    monthNamesShort: [
-      'Jan',
-      'Fev',
-      'Mar',
-      'Abr',
-      'Mai',
-      'Jun',
-      'Jul',
-      'Ago',
-      'Set',
-      'Out',
-      'Nov',
-      'Dez',
-    ],
-    today: 'Hoje',
-    clear: 'Limpar',
-  };
 
   constructor(
     private profileService: ProfileService,
