@@ -124,9 +124,11 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
   protected actionForSuccess(resource: T) {
     toastr.success('Solicitação processada com sucesso!');
 
+    const baseComponentPath: string = this.route.snapshot.parent.url[0].path;
+
     this.router
-      .navigateByUrl('resources', { skipLocationChange: true })
-      .then(() => this.router.navigate(['resources', resource.id, 'edit']));
+      .navigateByUrl(baseComponentPath, { skipLocationChange: true })
+      .then(() => this.router.navigate([baseComponentPath, resource.id, 'edit']));
   }
 
   protected actionForError(err) {
