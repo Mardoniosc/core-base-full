@@ -12,7 +12,7 @@
   </div>
 </div>
 
-<form [formGroup]="userForm" (submit)="submitForm()">
+<form [formGroup]="resourceForm" (submit)="submitForm()">
   <div class="card">
     <div class="card-header">Informações sobre o usuário</div>
 
@@ -24,10 +24,7 @@
         <div class="form-group col-md-4">
           <label for="nome">Nome</label>
           <input type="text" class="form-control" formControlName="nome" id="nome" />
-          <div class="text-danger" *ngIf="userForm.get('nome').invalid && userForm.get('nome').touched">
-            <div *ngIf="userForm.get('nome').errors.required">Preenchimento Obrigatório</div>
-            <div *ngIf="userForm.get('nome').errors.minlength">Deve ter no mínimo 2 caracteres</div>
-          </div>
+          <app-form-field-error [form-control]="resourceForm.get('nome')"></app-form-field-error>
 
         </div>
 
@@ -35,12 +32,14 @@
         <div class="form-group col-md-4">
           <label for="description">E-mail</label>
           <input type="email" class="form-control" formControlName="email" id="email" />
+          <app-form-field-error [form-control]="resourceForm.get('email')"></app-form-field-error>
         </div>
 
         <!-- CPF -->
         <div class="form-group col-md-4">
           <label for="description">CPF</label>
           <input type="text" class="form-control" id="cpf" formControlName="cpf" />
+          <app-form-field-error [form-control]="resourceForm.get('cpf')"></app-form-field-error>
         </div>
       </div>
 
@@ -50,6 +49,7 @@
         <div class="form-group col-md-4">
           <label for="senha">Senha</label>
           <input type="password" class="form-control" formControlName="senha" id="senha" />
+          <app-form-field-error [form-control]="resourceForm.get('senha')"></app-form-field-error>
         </div>
 
         <!-- confirmação da senha -->
@@ -63,6 +63,7 @@
           <label for="dataNascimento">Data Nascimento</label><br>
           <p-calendar id="dataNascimento" formControlName="dataNascimento" inputStyleClass="form-control"
             dateFormat="dd/mm/yy" [locale]="ptBR" [showButtonBar]="true"></p-calendar>
+            <app-form-field-error [form-control]="resourceForm.get('dataNascimento')"></app-form-field-error>
         </div>
       </div>
 
@@ -74,22 +75,24 @@
           <select class="form-control" name="perfilId" id="perfilId" formControlName="perfilId">
             <option *ngFor="let p of profiles" value="{{ p.id }}">{{ p.nome }}</option>
           </select>
+          <app-form-field-error [form-control]="resourceForm.get('perfilId')"></app-form-field-error>
         </div>
 
         <!-- Login User -->
         <div class="form-group col-md-4">
           <label for="login">Login</label>
           <input type="text" class="form-control" formControlName="login" id="login" />
+          <app-form-field-error [form-control]="resourceForm.get('login')"></app-form-field-error>
         </div>
 
         <!-- status usuário -->
         <div class="form-group col-md-2">
           <label for="paid">Status</label>
           <div class="btn-group">
-            <label (click)="this.userForm.get('status').setValue(1)"
-              [class.active]="this.userForm.get('status').value === 1" class="btn btn-outline-info">Ativado</label>
-            <label (click)="this.userForm.get('status').setValue(0)"
-              [class.active]="this.userForm.get('status').value === 0" class="btn btn-outline-info">Desativado</label>
+            <label (click)="this.resourceForm.get('status').setValue(1)"
+              [class.active]="this.resourceForm.get('status').value === 1" class="btn btn-outline-info">Ativado</label>
+            <label (click)="this.resourceForm.get('status').setValue(0)"
+              [class.active]="this.resourceForm.get('status').value === 0" class="btn btn-outline-info">Desativado</label>
           </div>
         </div>
       </div>
@@ -103,7 +106,7 @@
     </ul>
   </div>
 
-  <button [disabled]="submittingForm || userForm.invalid" type="submit" class="btn btn-primary btn-lg mt-3 float-right">
+  <button [disabled]="submittingForm || resourceForm.invalid" type="submit" class="btn btn-primary btn-lg mt-3 float-right">
     Salvar
   </button>
 

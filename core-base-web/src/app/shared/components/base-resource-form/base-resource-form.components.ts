@@ -73,7 +73,7 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
         .subscribe(
           (data) => {
             this.resource = data;
-            this.resourceForm.patchValue(this.resource);
+            this.populandoFormulario(data);
           },
           (err) => {
             this.actionForError(err);
@@ -121,6 +121,10 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
     );
   }
 
+  protected populandoFormulario(data) {
+    this.resourceForm.patchValue(this.resource);
+  }
+
   protected actionForSuccess(resource: T) {
     toastr.success('Solicitação processada com sucesso!');
 
@@ -128,7 +132,9 @@ export abstract class BaseResourceFormComponent<T extends BaseResourceModel>
 
     this.router
       .navigateByUrl(baseComponentPath, { skipLocationChange: true })
-      .then(() => this.router.navigate([baseComponentPath, resource.id, 'edit']));
+      .then(() =>
+        this.router.navigate([baseComponentPath, resource.id, 'edit'])
+      );
   }
 
   protected actionForError(err) {

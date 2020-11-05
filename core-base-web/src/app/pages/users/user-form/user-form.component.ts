@@ -1,30 +1,19 @@
-import { Component, OnInit, AfterContentChecked } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Injector } from '@angular/core';
+import { Validators } from '@angular/forms';
 
-import { switchMap } from 'rxjs/operators';
-import toastr from 'toastr';
-import { UsersService } from '../shared/users.service';
-import { User } from '../shared/user.model';
-import { Profile } from '../../profiles/shared/profile.model';
-import { ProfileService } from '../../profiles/shared/profile.service';
+import { UsersService, User } from '../shared';
+import { Profile, ProfileService } from '../../profiles/shared';
+import { BaseResourceFormComponent } from 'src/app/shared/components';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.css'],
 })
-export class UserFormComponent implements OnInit, AfterContentChecked {
-  currentAction: string;
-  userForm: FormGroup;
-  pageTitle: string;
-  serverErrorMessages: string[] = null;
-  submittingForm: boolean = false;
-
-  user: User = new User();
-
+export class UserFormComponent
+  extends BaseResourceFormComponent<User>
+  implements OnInit {
   profiles: Profile[] = [];
-
   ptBR = {
     firstDayOfWeek: 0,
     dayNames: [
@@ -71,46 +60,27 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
   };
 
   constructor(
-    private userService: UsersService,
-    private profileService: ProfileService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private formBuilder: FormBuilder
-  ) {}
-
-  ngOnInit(): void {
-    this.setCurrentAction();
-    this.buildUserForm();
-    this.loadProfiles();
-    this.loadUser();
+    protected profileService: ProfileService,
+    protected userService: UsersService,
+    protected injector: Injector
+  ) {
+    super(injector, new User(), userService, User.fromJson);
   }
 
-  ngAfterContentChecked() {
-    this.setPageTitle();
+  ngOnInit() {
+    this.loaderProfiles();
+    super.ngOnInit();
   }
 
-  submitForm() {
-    this.submittingForm = true;
-
-    if (this.currentAction === 'new') {
-      this.createUser();
-    } else {
-      this.updateUser();
-    }
+  protected loaderProfiles() {
+    this.profileService.getAll().subscribe(
+      (data) => (this.profiles = data),
+      (err) => super.actionForError(err)
+    );
   }
 
-  // PRIVATE METHODS
-
-  private setCurrentAction() {
-    if (this.route.snapshot.url[0].path === 'new') {
-      this.currentAction = 'new';
-    } else {
-      this.currentAction = 'edit';
-    }
-  }
-
-  private buildUserForm() {
-    this.userForm = this.formBuilder.group({
+  protected buildResourceForm() {
+    this.resourceForm = this.formBuilder.group({
       id: [null],
       nome: [null, [Validators.required, Validators.minLength(2)]],
       email: [null, [Validators.required, Validators.email]],
@@ -123,95 +93,26 @@ export class UserFormComponent implements OnInit, AfterContentChecked {
     });
   }
 
-  private loadProfiles() {
-    this.profileService.getAll().subscribe(
-      (data) => (this.profiles = data),
-      (err) => console.error(err)
-    );
+  protected populandoFormulario(data) {
+    const usuario: User = data;
+    this.resourceForm.patchValue({
+      nome: usuario.nome,
+      id: usuario.id,
+      email: usuario.email,
+      cpf: usuario.cpf,
+      login: usuario.login,
+      status: usuario.status,
+      perfilId: data['perfil'].id,
+      dataNascimento: new Date(usuario.dataNascimento),
+    });
   }
 
-  private loadUser() {
-    if (this.currentAction === 'edit') {
-      this.route.paramMap
-        .pipe(
-          switchMap((parms) =>
-            this.userService.getById(Number(parms.get('id')))
-          )
-        )
-        .subscribe(
-          (data) => {
-            this.user = data;
-            this.userForm.patchValue({
-              nome: this.user.nome,
-              id: this.user.id,
-              email: this.user.email,
-              cpf: this.user.cpf,
-              login: this.user.login,
-              status: this.user.status,
-              perfilId: data['perfil'].id,
-              dataNascimento: new Date(this.user.dataNascimento),
-            });
-          },
-          (err) => {
-            toastr.error('Erro ao carregar o usuario');
-            console.error('Erro ao carregar o usuario => ', err);
-          }
-        );
-    }
+  protected createPageTitle(): string {
+    return 'Cadastro de Novo Perfil';
   }
 
-  setPageTitle() {
-    if (this.currentAction === 'new') {
-      this.pageTitle = 'Cadastro de novo usuário';
-    } else {
-      const userName = this.user.nome || '';
-      this.pageTitle = 'Editando usuário: ' + userName;
-    }
-  }
-
-  private createUser() {
-    this.userForm.get('status').setValue(this.userForm.status ? 1 : 0);
-    const user: User = Object.assign(new User(), this.userForm.value);
-    this.userService.create(user).subscribe(
-      (data) => {
-        const locationHeader = data.headers.get('location');
-        const id_user = locationHeader.substring(
-          locationHeader.lastIndexOf('/') + 1
-        );
-        this.user.id = id_user;
-        this.actionForSuccess(this.user);
-      },
-      (err) => this.actionForError(err)
-    );
-  }
-
-  private updateUser() {
-    const user: User = Object.assign(new User(), this.userForm.value);
-    this.userService.update(user).subscribe(
-      (user) => this.actionForSuccess(user),
-      (err) => this.actionForError(err)
-    );
-  }
-
-  private actionForSuccess(user: User) {
-    toastr.success('Solicitação processada com sucesso!');
-
-    this.router
-      .navigateByUrl('users', { skipLocationChange: true })
-      .then(() => this.router.navigate(['users', user.id, 'edit']));
-  }
-
-  private actionForError(err) {
-    toastr.error('Ocorreu um erro ao processar a sua solicitação!');
-
-    this.submittingForm = false;
-
-    if (err.status === 422) {
-      this.serverErrorMessages = JSON.parse(err._body).erros;
-    } else {
-      this.serverErrorMessages = [
-        'Falha na comunicação com o servidor. Favor tente mais tarde!',
-      ];
-    }
+  protected editionPageTitle(): string {
+    const categoryName = this.resource.nome || '';
+    return 'Editando Perfil: ' + categoryName;
   }
 }
