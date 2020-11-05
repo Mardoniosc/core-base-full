@@ -15,7 +15,16 @@ const routes: Routes = [
   {
     path: 'permitions',
     loadChildren: () =>
-      import('./pages/permitions/permitions.module').then((m) => m.PermitionsModule),
+      import('./pages/permitions/permitions.module').then(
+        (m) => m.PermitionsModule
+      ),
+  },
+  {
+    path: 'historys',
+    loadChildren: () =>
+      import('./pages/historico-log/historico-log.module').then(
+        (m) => m.HistoricoLogModule
+      ),
   },
 ];
 
