@@ -3,6 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
+    path: '', redirectTo: 'dashboard', pathMatch: 'full'
+  },
+
+  {
     path: 'users',
     loadChildren: () =>
       import('./pages/users/users.module').then((m) => m.UsersModule),
@@ -24,6 +28,13 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/historico-log/historico-log.module').then(
         (m) => m.HistoricoLogModule
+      ),
+  },
+  {
+    path: 'dashboard',
+    loadChildren: () =>
+      import('./pages/dashboard/dashboard.module').then(
+        (m) => m.DashboardModule
       ),
   },
 ];
