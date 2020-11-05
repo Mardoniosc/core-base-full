@@ -23,7 +23,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let permition of permitions">
+    <tr *ngFor="let permition of resources">
       <td>
         <strong>{{ permition.descricao }}</strong><br />
       </td>
@@ -32,7 +32,7 @@
       </td>
       <td>
         <a [routerLink]="[permition.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
-        <a class="btn btn-outline-danger btn-sm" (click)="deletePermition(permition)">Excluir</a>
+        <a class="btn btn-outline-danger btn-sm" (click)="deleteResource(permition)">Excluir</a>
       </td>
     </tr>
   </tbody>

@@ -1,36 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Permition, PermitionService } from '../shared';
+import { BaseResourceListComponent } from 'src/app/shared/components';
 
 @Component({
   selector: 'app-permition-list',
   templateUrl: './permition-list.component.html',
   styleUrls: ['./permition-list.component.css'],
 })
-export class PermitionListComponent implements OnInit {
-  permitions: Permition[] = [];
-
-  constructor(private permitionService: PermitionService) {}
-
-  ngOnInit(): void {
-    this.permitionService.getAll().subscribe(
-      (permitions) => {
-        this.permitions = permitions;
-      },
-      (err) => console.error(err)
-    );
-  }
-
-  deletePermition(permition: Permition) {
-    const mustDelete = confirm('Deseja realmente excluir este usuário?');
-
-    if (mustDelete) {
-      this.permitionService.delete(permition.id).subscribe(
-        (data) =>
-          (this.permitions = this.permitions.filter(
-            (x) => x.id != permition.id
-          )),
-        (err) => alert('Erro ao tentar excluir este usuário!')
-      );
-    }
+export class PermitionListComponent extends BaseResourceListComponent<Permition> {
+  constructor(protected permitionService: PermitionService) {
+    super(permitionService)
   }
 }
